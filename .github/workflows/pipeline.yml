@@ -16,17 +16,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Criar pasta para validação
-        run: |
-          mkdir validated
-          find . -name "*.html" -exec cp --parents {} validated/ \;
-          if [ -d "css" ]; then cp -r css validated/; fi
-          rm -rf validated/.git
-
       - name: Rodar validador HTML5
         uses: Cyb3r-Jak3/html5validator-action@v7.0.0
         with:
-          root: validated
+          root: .
           log_level: INFO
           css: true
           format: json
