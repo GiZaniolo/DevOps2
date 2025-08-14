@@ -1,0 +1,32 @@
+name: CI - Validação de código
+
+on:
+  push:
+    branches: [ main, feature/** ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (para htmlhint)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar HTMLHint
+        run: npm install -g htmlhint
+
+      - name: Validar HTML
+        run: htmlhint "**/*.html"
+
+      - name: Verificar links quebrados (Lychee)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --verbose "**/*.html" "**/*.md"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
