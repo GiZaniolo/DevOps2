@@ -14,13 +14,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # garante que o git seja detectado
 
-      - name: Validate HTML
+      - name: Validate HTML (no git detection)
         uses: Cyb3r-Jak3/html5validator-action@v7.0.0
         with:
           root: .
+          log_level: INFO
+          format: json
+          css: true
 
       - name: Build project
         run: |
@@ -35,8 +36,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
