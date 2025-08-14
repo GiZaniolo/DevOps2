@@ -1,8 +1,9 @@
-name: Continuous Delivery
+name: Deploy to GitHub Pages
 
 on:
   push:
-  pull_request:
+    branches:
+      - main  # só dispara quando a main receber o merge
 
 permissions:
   contents: read
@@ -14,35 +15,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar Pages
+      - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Preparar artefatos do site (estático)
-        run: |
-          mkdir -p dist
-          rsync -a --exclude '.git' --exclude '.github' ./ dist/
-
-      - name: Enviar artefato para Pages
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    # Mostra a segunda caixinha em qualquer branch,
-    # mas só executa (fica verde) quando for a main:
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Publicar no GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name
