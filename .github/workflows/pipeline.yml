@@ -6,9 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write   # Permite o bot fazer push
+
 jobs:
-  validate-html:
-    name: Validar HTML
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do código
@@ -20,23 +23,32 @@ jobs:
           sudo apt-get install -y python3-pip
           pip install html5validator
 
-      - name: Rodar validador HTML5
+      - name: Validar HTML5
         run: |
           html5validator --root . --log-level INFO --format json --show-warnings --css
 
-  deploy:
-    name: Deploy para GitHub Pages
-    needs: validate-html
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
-
-      - name: Montar pasta dist
+      - name: Preparar pasta dist
         run: |
           mkdir dist
           shopt -s extglob
           cp -r !(dist) dist/
+
+      - name: Upload do build como artefato
+        uses: actions/upload-artifact@v3
+        with:
+          name: site-build
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar artefato do build
+        uses: actions/download-artifact@v3
+        with:
+          name: site-build
+          path: dist
 
       - name: Publicar no GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
