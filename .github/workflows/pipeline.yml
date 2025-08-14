@@ -14,11 +14,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Validate HTML (no git detection)
+      - name: Prepare HTML files
+        run: |
+          mkdir -p validated
+          cp -r *.html validated/ || true
+          cp -r css validated/ || true
+
+      - name: Validate HTML without Git detection
         uses: Cyb3r-Jak3/html5validator-action@v7.0.0
         with:
-          root: .
+          root: validated
           log_level: INFO
           format: json
           css: true
