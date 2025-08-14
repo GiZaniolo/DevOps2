@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Pipeline de CI/CD
 
 on:
   push:
@@ -6,7 +6,19 @@ on:
       - main
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Validar HTML
+        uses: Cyb3r-Jak3/html5validator-action@v1.0.3
+        with:
+          root: ./
+
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout código
@@ -16,4 +28,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./  # pasta onde estão seus arquivos HTML/CSS
+          publish_dir: ./dist
