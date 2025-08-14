@@ -3,8 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
+      - main  # só dispara quando a main receber o merge
 
 permissions:
   contents: read
@@ -25,13 +24,4 @@ jobs:
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload do site
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Se seus arquivos finais estiverem na raiz:
-          path: .
-          # Se estiverem em outra pasta (ex.: docs, dist), troque para: ./docs ou ./dist
-
-      - name: Publicar no Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name
