@@ -28,7 +28,9 @@ jobs:
       - name: Upload do site
         uses: actions/upload-pages-artifact@v3
         with:
+          # Se seus arquivos finais estiverem na raiz:
           path: .
+          # Se estiverem em outra pasta (ex.: docs, dist), troque para: ./docs ou ./dist
 
       - name: Publicar no Pages
         id: deployment
