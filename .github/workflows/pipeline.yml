@@ -8,7 +8,7 @@ on:
 
 jobs:
   validate-html:
-    name: Validação HTML
+    name: Validar HTML
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do código
@@ -16,11 +16,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Preparar arquivos para validação
+      - name: Criar pasta para validação
         run: |
           mkdir validated
           find . -name "*.html" -exec cp --parents {} validated/ \;
           if [ -d "css" ]; then cp -r css validated/; fi
+          rm -rf validated/.git
 
       - name: Rodar validador HTML5
         uses: Cyb3r-Jak3/html5validator-action@v7.0.0
@@ -38,7 +39,7 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Gerar pasta dist
+      - name: Montar pasta dist
         run: |
           mkdir dist
           shopt -s extglob
