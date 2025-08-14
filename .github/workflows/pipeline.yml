@@ -2,50 +2,57 @@ name: CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  build:
+  validate-html:
+    name: Validação HTML
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout do código
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Prepare HTML files
+      - name: Preparar arquivos para validação
         run: |
-          mkdir -p validated
-          cp -r *.html validated/ || true
-          cp -r css validated/ || true
+          mkdir validated
+          find . -name "*.html" -exec cp --parents {} validated/ \;
+          if [ -d "css" ]; then cp -r css validated/; fi
 
-      - name: Validate HTML without Git detection
+      - name: Rodar validador HTML5
         uses: Cyb3r-Jak3/html5validator-action@v7.0.0
         with:
           root: validated
           log_level: INFO
-          format: json
           css: true
+          format: json
 
-      - name: Build project
+  build:
+    name: Build
+    needs: validate-html
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Gerar pasta dist
         run: |
-          echo "Nenhum build específico configurado"
-          mkdir -p dist
+          mkdir dist
           shopt -s extglob
           cp -r !(dist) dist/
 
   deploy:
+    name: Deploy
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Deploy to GitHub Pages
+      - name: Publicar no GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
