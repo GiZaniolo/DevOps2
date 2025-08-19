@@ -1,4 +1,4 @@
-name: CI/CD com Docker e GitHub Pages
+name: CI/CD
 
 on:
   push:
@@ -6,33 +6,32 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write   # necessário para publicar no gh-pages
-
     steps:
-      - name: Checkout do código
+      # 1. Checkout do código
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build da imagem Docker
+      # 2. Build da imagem Docker
+      - name: Build Docker image
         run: docker build -t meu-site .
 
-      - name: Rodar container
-        run: docker run -d -p 8080:80 --name meu-site-container meu-site
+      # 3. Rodar o container
+      - name: Run container
+        run: docker run -d -p 8080:80 --name meu-site meu-site
 
-      - name: Aguardar container iniciar
-        run: sleep 10
-
+      # 4. Testar se o container respondeu 
       - name: Testar aplicação no container
         run: |
           echo "Fazendo requisição para o container..."
           curl -s http://localhost:8080 | tee page.html || true
           echo "Step concluído com sucesso"
 
-      - name: Publicar no GitHub Pages
+      # 5. Deploy no GitHub Pages
+      - name: Deploy para GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./
