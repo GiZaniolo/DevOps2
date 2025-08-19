@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write   # permite publicar no branch gh-pages
+      contents: write   # necessário para publicar no gh-pages
 
     steps:
       - name: 📥 Checkout do código
@@ -33,14 +33,13 @@ jobs:
 
           if echo "$RESPONSE" | grep -q "Olá, CI/CD com GitHub Actions!"; then
             echo "Página carregada corretamente"
-            exit 0
           else
             echo "Página respondeu mas não contém o texto esperado"
-            exit 0
           fi
+          exit 0   # garante que o job continue mesmo sem erro
 
       - name: 📦 Salvar HTML gerado
-        uses: actions/upload-artifact@v4  
+        uses: actions/upload-artifact@v4
         with:
           name: site-gerado
           path: page.html
