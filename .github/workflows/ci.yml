@@ -1,25 +1,30 @@
-name: CI - Validação de código
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, feature/* ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
-  lint-html:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
+      - name: Checkout do código
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Configurar Docker
+        run: |
+          docker build -t meu-site .
 
-      - name: Instalar HTMLHint
-        run: npm install -g htmlhint
+      - name: Rodar container
+        run: |
+          docker run -d -p 8080:80 --name site-container meu-site
+          sleep 5  # espera alguns segundos para garantir que subiu
 
-      - name: Validar HTML
-        run: htmlhint "**/*.html"
+      - name: Testar aplicação no container
+        run: |
+          RESPONSE=$(curl -s http://localhost:8080)
+          echo "$RESPONSE" | tee page.html
+          echo "$RESPONSE" | grep "Olá, CI/CD com GitHub Actions!"
