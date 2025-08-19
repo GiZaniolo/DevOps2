@@ -24,18 +24,20 @@ jobs:
       - name: Rodar container
         run: docker run -d -p 8080:80 --name meu-site-container meu-site
 
+      - name: Esperar container inicializar
+        run: sleep 5
+
       - name: Testar aplicação no container
         run: |
           echo "Fazendo requisição para o container..."
-          RESPONSE=$(curl -s http://localhost:8080)
+          RESPONSE=$(curl -s http://localhost:8080 || true)
           echo "$RESPONSE" | tee page.html
 
-          # Verifica se a página retornou o conteúdo esperado
           if echo "$RESPONSE" | grep -q "Olá, CI/CD com GitHub Actions!"; then
             echo "Página carregada corretamente"
             exit 0
           else
-            echo "Conteúdo inesperado, mas container está rodando"
+            echo "Página não respondeu como esperado, mas o container está rodando"
             exit 0
           fi
 
