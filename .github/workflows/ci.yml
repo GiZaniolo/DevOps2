@@ -31,13 +31,15 @@ jobs:
 
       - name: Testar aplicação no container
         run: |
-          for i in {1..5}; do
-            echo "Tentando acessar (tentativa $i)..."
-            if curl -s http://localhost:8080 | grep "CI/CD"; then
-              echo "✅ Aplicação respondeu corretamente"
-              exit 0
-            fi
-            sleep 3
-          done
-          echo "❌ A aplicação não respondeu como esperado"
-          exit 1
+          echo "Fazendo requisição para o container..."
+          RESPONSE=$(curl -s http://localhost:8080)
+          echo "$RESPONSE"
+
+          # Valida se a página contém o título esperado
+          if echo "$RESPONSE" | grep -q "Olá, CI/CD com GitHub Actions!"; then
+            echo "✅ Página carregada corretamente"
+            exit 0
+          else
+            echo "Conteúdo inesperado"
+            exit 1
+          fi
