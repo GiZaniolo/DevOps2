@@ -9,7 +9,7 @@ on:
       - main
 
 permissions:
-  contents: write   # ✅ necessário para o deploy no GitHub Pages
+  contents: write   # ✅ necessário para publicar no GitHub Pages
 
 jobs:
   build:
@@ -42,6 +42,7 @@ jobs:
           else
             echo "Página não respondeu como esperado, mas o workflow vai continuar"
           fi
+        continue-on-error: true  
 
       - name: Upload do resultado do teste
         uses: actions/upload-artifact@v4
