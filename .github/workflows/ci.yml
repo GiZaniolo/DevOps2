@@ -10,26 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout do código
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Build da imagem Docker
       - name: Build Docker image
         run: docker build -t meu-site .
 
-      # 3. Rodar o container
       - name: Run container
         run: docker run -d -p 8080:80 --name meu-site meu-site
 
-      # 4. Testar se o container respondeu 
       - name: Testar aplicação no container
         run: |
           echo "Fazendo requisição para o container..."
           curl -s http://localhost:8080 | tee page.html || true
           echo "Step concluído com sucesso"
 
-      # 5. Deploy no GitHub Pages
       - name: Deploy para GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
