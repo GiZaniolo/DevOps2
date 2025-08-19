@@ -13,19 +13,19 @@ jobs:
       contents: write   # necessário para publicar no gh-pages
 
     steps:
-      - name: 📥 Checkout do código
+      - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: 🐳 Build da imagem Docker
+      - name: Build da imagem Docker
         run: docker build -t meu-site .
 
-      - name: 🚀 Rodar container
+      - name: Rodar container
         run: docker run -d -p 8080:80 --name meu-site-container meu-site
 
-      - name: ⏳ Aguardar container iniciar
+      - name: Aguardar container iniciar
         run: sleep 10
 
-      - name: 🔍 Testar aplicação no container
+      - name: Testar aplicação no container
         run: |
           echo "Fazendo requisição para o container..."
           RESPONSE=$(curl -s http://localhost:8080 || true)
@@ -36,15 +36,16 @@ jobs:
           else
             echo "Página respondeu mas não contém o texto esperado"
           fi
-          exit 0   # garante que o job continue mesmo sem erro
+          # Garante que o job não quebre
+          exit 0
 
-      - name: 📦 Salvar HTML gerado
+      - name: Salvar HTML gerado
         uses: actions/upload-artifact@v4
         with:
           name: site-gerado
           path: page.html
 
-      - name: 🌐 Publicar no GitHub Pages
+      - name: Publicar no GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
