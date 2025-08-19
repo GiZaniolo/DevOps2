@@ -28,16 +28,7 @@ jobs:
       - name: Testar aplicação no container
         run: |
           echo "Fazendo requisição para o container..."
-          RESPONSE=$(curl -s http://localhost:8080 || true)
-          echo "$RESPONSE" | tee page.html
-
-          if echo "$RESPONSE" | grep -q "Olá, CI/CD com GitHub Actions!"; then
-            echo "Página carregada corretamente"
-          else
-            echo "Página respondeu mas não contém o texto esperado"
-          fi
-
-          # Não deixar o job falhar
+          curl -s http://localhost:8080 | tee page.html || true
           exit 0
 
       - name: Publicar no GitHub Pages
