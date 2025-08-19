@@ -34,9 +34,10 @@ jobs:
           if echo "$RESPONSE" | grep -q "Olá, CI/CD com GitHub Actions!"; then
             echo "Página carregada corretamente"
           else
-            echo "Página respondeu mas não contém o texto esperado"
+            echo "⚠Página respondeu mas não contém o texto esperado"
           fi
-          # Força sucesso, mesmo que grep falhe
+
+          # Sempre finaliza com sucesso
           exit 0
 
       - name: Salvar HTML gerado
