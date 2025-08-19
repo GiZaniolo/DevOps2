@@ -1,9 +1,8 @@
-# Usa a imagem base do Nginx
+#usa uma imagem baseada no Nginx
 FROM nginx:alpine
 
-# Copia os arquivos do repositório para a pasta padrão do Nginx
+#copia os arquivos do repositório para a pasta padrão 
 COPY . /usr/share/nginx/html
 
-# Expõe a porta 80
+#expoe a porta 80
 EXPOSE 80
-
