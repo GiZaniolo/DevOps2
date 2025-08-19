@@ -43,7 +43,7 @@ jobs:
           fi
 
       - name: Upload do resultado do teste
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4   # 🔥 corrigido para v4
         with:
           name: pagina-gerada
           path: page.html
