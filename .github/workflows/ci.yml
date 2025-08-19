@@ -36,7 +36,7 @@ jobs:
           else
             echo "Página respondeu mas não contém o texto esperado"
           fi
-          # Garante que o job não quebre
+          # Força sucesso, mesmo que grep falhe
           exit 0
 
       - name: Salvar HTML gerado
@@ -49,4 +49,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .   # publica os arquivos da raiz
+          publish_dir: .
