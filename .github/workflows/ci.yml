@@ -37,14 +37,8 @@ jobs:
             echo "Página respondeu mas não contém o texto esperado"
           fi
 
-          # Garante que o step não falhe
+          # Não deixar o job falhar
           exit 0
-
-      - name: Salvar HTML gerado
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-gerado
-          path: page.html
 
       - name: Publicar no GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
