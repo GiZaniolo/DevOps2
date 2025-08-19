@@ -23,8 +23,21 @@ jobs:
       - name: Rodar container em background
         run: docker run -d -p 8080:80 --name site-container meu-site
 
+      - name: Aguardar container iniciar
+        run: |
+          echo "Aguardando container iniciar..."
+          sleep 5
+          docker ps -a
+
       - name: Testar aplicação no container
         run: |
-          RESPONSE=$(curl -s http://localhost:8080)
-          echo "$RESPONSE" | tee page.html
-          echo "$RESPONSE" | grep "CI/CD"
+          for i in {1..5}; do
+            echo "Tentando acessar (tentativa $i)..."
+            if curl -s http://localhost:8080 | grep "CI/CD"; then
+              echo "✅ Aplicação respondeu corretamente"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "❌ A aplicação não respondeu como esperado"
+          exit 1
