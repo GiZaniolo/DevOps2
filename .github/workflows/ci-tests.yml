@@ -1,0 +1,26 @@
+name: CI - Unit Tests (Jest)
+
+on:
+  pull_request:
+    branches: [ "main", "principal" ]  # mantém "main"; adicione "principal" se usar esse nome
+  workflow_dispatch:  # permite rodar manualmente se quiser
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Rodar testes
+        run: npm test -- --ci
