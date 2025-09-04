@@ -1,26 +1,25 @@
-name: CI - Unit Tests (Jest)
+name: CI - Testes Unitários (Jest)
 
 on:
   pull_request:
-    branches: [ "main", "principal" ]  # mantém "main"; adicione "principal" se usar esse nome
-  workflow_dispatch:  # permite rodar manualmente se quiser
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: '20'
 
-      - name: Instalar dependências
-        run: npm install
+      - name: Instalar dependências (sem lockfile)
+        run: npm install --no-package-lock
 
-      - name: Rodar testes
-        run: npm test -- --ci
+      - name: Rodar testes unitários
+        run: npm test
